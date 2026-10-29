@@ -1,0 +1,39 @@
+-- Create Database
+CREATE DATABASE IF NOT EXISTS university_db;
+USE university_db;
+
+-- 1. Instructor Table
+CREATE TABLE instructor (
+    instructor_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    department VARCHAR(100) NOT NULL
+);
+
+-- 2. Course Table (One-to-Many with Instructor)
+CREATE TABLE course (
+    course_code VARCHAR(20) PRIMARY KEY,
+    course_title VARCHAR(100) NOT NULL,
+    credits INT NOT NULL,
+    instructor_id INT,
+    FOREIGN KEY (instructor_id) REFERENCES instructor(instructor_id) ON DELETE SET NULL
+);
+
+-- 3. Student Table
+CREATE TABLE student (
+    student_id INT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL
+);
+
+-- 4. Enrollment Table (Many-to-Many junction table between Student and Course)
+CREATE TABLE enrollment (
+    enrollment_id INT PRIMARY KEY AUTO_INCREMENT,
+    semester VARCHAR(20) NOT NULL,
+    year INT NOT NULL,
+    grade VARCHAR(5),
+    student_id INT NOT NULL,
+    course_code VARCHAR(20) NOT NULL,
+    FOREIGN KEY (student_id) REFERENCES student(student_id) ON DELETE CASCADE,
+    FOREIGN KEY (course_code) REFERENCES course(course_code) ON DELETE CASCADE
+);
